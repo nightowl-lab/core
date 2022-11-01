@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <group>
+        <push-ros-namespace namespace="vehicle"/>
+
+        <arg name="can_interface" default="can0"/>
+
+        <!-- 底盘控制 -->
+        <include file="$(find-pkg-share nightowl_launch)/launch/vehicle/socket_can_receiver.launch.py">
+            <arg name="interface" value="$(var can_interface)" />
+        </include>
+        <include file="$(find-pkg-share nightowl_launch)/launch/vehicle/socket_can_sender.launch.py">
+            <arg name="interface" value="$(var can_interface)" />
+        </include>
+        <include file="$(find-pkg-share nightowl_launch)/launch/vehicle/vehicle_container.launch.py">
+            <arg name="use_vehicle_container" value="True" />
+        </include>
+
+        <!-- Vehicle Velocity Converter  -->
+        <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
+          <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
+          <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+        </include>
+    </group>
+</launch>

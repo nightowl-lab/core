@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!-- hmf 10.16 -->
+
+<launch>
+  <arg name="input/pointcloud" default="/sensing/lidar/top/outlier_filtered/pointcloud" description="The topic will be used in the localization util module"/>
+  <arg name="container" default="/sensing/lidar/top/pointcloud_preprocessor/lslidar_container" description="container name"/>
+  <arg name="nightowl_localization_launch_param_path" default="$(find-pkg-share nightowl_launch)/config/localization" description="nightowl_localization_launch  parameter path"/>
+  
+ <!-- localization module -->
+  <group>
+    <push-ros-namespace namespace="localization"/>
+
+    <!-- util module -->
+    <group>
+      <push-ros-namespace namespace="util"/>
+      <include file="$(find-pkg-share nightowl_launch)/launch/localization/util/util.launch.xml">
+        <arg name="input/pointcloud" value="$(var input/pointcloud)"/>
+        <arg name="container" value="$(var container)"/>
+        <arg name="nightowl_localization_launch_param_path" value="$(var nightowl_localization_launch_param_path)"/>
+      </include>
+    </group>
+
+    <!-- pose_estimator module -->
+    <group>
+      <push-ros-namespace namespace="pose_estimator"/>
+      <include file="$(find-pkg-share nightowl_launch)/launch/localization/pose_estimator/pose_estimator.launch.xml">
+        <arg name="nightowl_localization_launch_param_path" value="$(var nightowl_localization_launch_param_path)"/>
+      </include>
+    </group>
+
+    <!-- twist_estimator module -->
+    <group>
+      <push-ros-namespace namespace="twist_estimator"/>
+      <include file="$(find-pkg-share nightowl_launch)/launch/localization/twist_estimator/twist_estimator.launch.xml"/>
+    </group>
+
+    <!-- pose_twist_fusion_filter module -->
+    <group>
+      <push-ros-namespace namespace="pose_twist_fusion_filter"/>
+      <include file="$(find-pkg-share nightowl_launch)/launch/localization/pose_twist_fusion_filter/pose_twist_fusion_filter.launch.xml"/>
+    </group>
+
+    <!-- localization_error_monitor_module -->
+    <group>
+      <include file="$(find-pkg-share nightowl_launch)/launch/localization/localization_error_monitor/localization_error_monitor.launch.xml">
+          <arg name="param_file" value="$(var nightowl_localization_launch_param_path)/localization_error_monitor.param.yaml"/>
+      </include>
+    </group>
+    
+  </group>
+
+</launch>

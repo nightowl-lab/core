@@ -1,0 +1,26 @@
+<launch>
+  <arg name="node_rate" default="1"/>
+  <arg name="timesync_flag" default="true"/>
+  <arg name="port" default="/dev/ttyACM0"/>
+  <arg name="baudrate" default="115200"/>
+  <arg name="gnss_frame" default="ins_link"/>
+  <arg name="imu_frame" default="ins_link"/>
+
+  <arg name="output_topic_gpfpd" default="/starneto/gnss/raw_data"/>
+  <arg name="output_topic_gtimu" default="/starneto/imu/raw_data"/>
+  <arg name="output_topic_gpgga" default="/starneto/gpgga/raw_data"/>
+
+  <node pkg="starneto_control" exec="starneto_control" name="starneto_control" output="screen">
+    <remap from="output/topic_gpfpd" to="$(var output_topic_gpfpd)"/>
+    <remap from="output/topic_gtimu" to="$(var output_topic_gtimu)"/>
+    <remap from="output/topic_gpgga" to="$(var output_topic_gpgga)"/>
+
+    <param name="node_rate" value="$(var node_rate)" />
+    <param name="timesync_flag" value="$(var timesync_flag)"/>
+    <param name="port" value="$(var port)" />
+    <param name="baudrate" value="$(var baudrate)"/>
+    <param name="gnss_frame" value="$(var gnss_frame)" />
+    <param name="imu_frame" value="$(var imu_frame)" />
+  </node>
+
+</launch>

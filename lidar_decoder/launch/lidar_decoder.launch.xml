@@ -1,0 +1,32 @@
+<launch>
+  <arg name="model" default="LSC16"/>
+  <arg name="time_synchronization" default="false"/>
+  <arg name="lidar_channel_param_file" default="$(find-pkg-share lidar_decoder)/config/lidar_channal.param.yaml" description="vertical angle in each channel"/>
+  <arg name="lidar_data_param_file" default="$(find-pkg-share lidar_decoder)/config/lidar_data.param.yaml" description="basic configure of lidar"/>   
+  <arg name="vehicle_param_file" default="$(find-pkg-share lidar_decoder)/config/vehicle_info.param.yaml" description="path to the file of vehicle info yaml"/>
+  <arg name="vehicle_mirror_param_file" default="$(find-pkg-share lidar_decoder)/config/mirror.param.yaml" description="path to the file of vehicle mirror position yaml"/>
+
+
+  <arg name="input_topic_msop" default="/lslidar/msop_packet"/>
+  <arg name="input_topic_difop" default="/lslidar/difop_packet"/>
+  <arg name="input_topic_sync" default="/lslidar/sync_header"/>
+
+  <arg name="output_topic_pointCloud" default="pointcloud_raw_ex"/>
+
+  <node pkg="lidar_decoder" exec="lidar_decoder" name="lidar_decoder" output="screen">
+    <remap from="input/msop_packet" to="$(var input_topic_msop)"/>
+    <remap from="input/difop_packet" to="$(var input_topic_difop)"/>
+    <remap from="input/sync_header" to="$(var input_topic_sync)"/>
+
+    <remap from="output/point_cloud" to="$(var output_topic_pointCloud)"/>
+
+    <param name="model" value="$(var model)" />
+    <param name="time_synchronization" value="$(var time_synchronization)" />
+    <param from="$(var lidar_channel_param_file)"/>
+    <param from="$(var lidar_data_param_file)"/>
+    <param from="$(var vehicle_param_file)"/>
+    <param from="$(var vehicle_mirror_param_file)"/>
+
+  </node>
+
+</launch>

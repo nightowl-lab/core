@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- hmf 10.16 -->
+
+<launch>
+  <!-- Topics -->
+  <arg name="input/pointcloud" description="input topic name"/>
+    <arg name="nightowl_localization_launch_param_path" description="nightowl_localization param path"/>
+  <arg name="output/pointcloud" default="downsample/pointcloud" description="final output topic name"/>
+
+  <!-- container -->
+  <arg name="container" default="/sensing/lidar/top/pointcloud_preprocessor/lslidar_container" description="container name"/>
+
+  <!-- option -->
+  <arg name="use_intra_process" default="true" description="use ROS2 component container communication"/>
+
+  <!-- pose_initializer -->
+  <group>
+    <include file="$(find-pkg-share pose_initializer)/launch/pose_initializer.launch.xml">
+      <arg name="gnss_enabled" value="true"/>
+      <arg name="ndt_enabled" value="true"/>
+      <arg name="stop_check_enabled" value="true"/>
+    </include>
+  </group>
+
+  <!-- pose_initializer (Automatic call from AD API) -->
+  <group>
+    <include file="$(find-pkg-share automatic_pose_initializer)/launch/automatic_pose_initializer.launch.xml"/>
+  </group>
+
+
+  <!-- util -->
+  <group>
+    <include file="$(find-pkg-share nightowl_launch)/launch/localization/util/util.launch.py">
+      <arg name="nightowl_localization_launch_param_path" value="$(var nightowl_localization_launch_param_path)"/>
+      <arg name="input/pointcloud" value="$(var input/pointcloud)"/>
+      <arg name="output/pointcloud" value="$(var output/pointcloud)"/>
+      <arg name="container" value="$(var container)"/>
+      <arg name="use_intra_process" value="$(var use_intra_process)"/>
+    </include>
+  </group>
+  
+</launch>

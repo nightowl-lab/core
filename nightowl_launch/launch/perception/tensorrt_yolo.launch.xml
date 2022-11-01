@@ -1,0 +1,9 @@
+<launch>
+    <!-- 前置摄像头 -->
+    <include file="$(find-pkg-share tensorrt_yolo)/launch/tensorrt_yolo.launch.xml">
+        <arg name="yolo_type" value="yolov5x"/>
+        <arg name="input_topic" value="/sensing/camera/front/left_image"/>
+        <arg name="output_topic" value="/perception/object_recognition/detection/rois0"/>
+        <arg name="gpu_id" value="0"/>
+    </include>
+</launch>

@@ -1,0 +1,12 @@
+<launch>
+    <group>
+        <push-ros-namespace namespace="perception"/>
+
+        <!-- 目标检测 -->
+        <group>
+            <push-ros-namespace namespace="tensorrt_yolo"/>
+
+            <include file="$(find-pkg-share nightowl_launch)/launch/perception/tensorrt_yolo.launch.xml"></include>
+        </group>
+    </group>
+</launch>

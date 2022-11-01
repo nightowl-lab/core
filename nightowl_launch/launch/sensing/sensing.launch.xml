@@ -1,0 +1,35 @@
+<launch>
+    <group>
+        <push-ros-namespace namespace="sensing"/>
+	
+	    <!-- 摄像头 -->
+        <group>
+            <push-ros-namespace namespace="camera"/>
+            <include file="$(find-pkg-share nightowl_launch)/launch/sensing/camera.launch.xml"></include>
+        </group>
+
+        <!-- 雷达 -->
+        <group>
+            <push-ros-namespace namespace="lidar"/>
+            <include file="$(find-pkg-share nightowl_launch)/launch/sensing/lidar.launch.xml"></include>
+        </group>
+
+        <!-- 惯导 -->
+        <group>
+            <push-ros-namespace namespace="ins"/>
+            <include file="$(find-pkg-share nightowl_launch)/launch/sensing/ins.launch.xml"></include>
+        </group>
+
+        <!-- GNSS -->
+        <!-- <group>
+            <push-ros-namespace namespace="gnss"/>
+            <include file="$(find-pkg-share nightowl_launch)/launch/sensing/gnss.launch.xml"></include>
+        </group> -->
+
+        <!-- IMU -->
+        <!-- <group>
+            <push-ros-namespace namespace="imu"/>
+            <include file="$(find-pkg-share nightowl_launch)/launch/sensing/imu.launch.xml"></include>
+        </group> -->
+    </group>
+</launch>

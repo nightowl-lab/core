@@ -1,0 +1,16 @@
+<launch>
+    <arg name="model" default="100D2"/>
+    <arg name="port" default="/dev/ttyUSB0"/>
+    <arg name="baudrate" default="115200"/>
+    <arg name="delay" default="0.0"/>
+    <arg name="frame_id" default="ins_link"/>
+
+    <node pkg="sanchi_amov" exec="imu_driver" name="imu" output="screen">
+        <param name="model" value="$(var model)"/>
+        <param name="port" value="$(var port)"/>
+        <param name="baudrate" value="$(var baudrate)"/>
+        <param name="delay" value="$(var delay)"/>
+        <param name="frame_id" value="$(var frame_id)"/>
+    </node>
+
+</launch>

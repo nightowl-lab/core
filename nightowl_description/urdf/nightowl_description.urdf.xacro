@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="nightowl_description">
+    <!-- Base Footprint, to prevent KD-Tree warnings. -->
+    <link name="base_footprint"/>
+    <joint name="footprint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+    <xacro:include filename="./vehicle.urdf.xacro"/>
+</robot>

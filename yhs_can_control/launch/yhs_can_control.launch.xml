@@ -1,0 +1,50 @@
+<launch>
+  <arg name="can_interface" default="can0" />
+  <arg name="can_receiver_interval_sec" default="0.01" />
+  <arg name="can_sender_timeout_sec" default="0.01" />
+
+  <arg name="input_can_send" default="/vehicle/can/send"/>
+  <arg name="output_can_receive" default="/vehicle/can/receive"/>
+
+  <arg name="output_ctrl_feedback" default="/vehicle/driver/ctrl_feedback"/>
+  <arg name="output_left_wheel_feedback" default="/vehicle/driver/left_wheel_feedback"/>
+  <arg name="output_right_wheel_feedback" default="/vehicle/driver/right_wheel_feedback"/>
+  <arg name="output_io_feedback" default="/vehicle/driver/io_feedback"/>
+  <arg name="output_odometry_feedback" default="/vehicle/driver/odometry_feedback"/>
+  <arg name="output_battery_information_feedback" default="/vehicle/driver/battery_information_feedback"/>
+  <arg name="output_battery_flag_feedback" default="/vehicle/driver/battery_flag_feedback"/>
+  <arg name="output_wheel_encoder_feedback" default="/vehicle/driver/wheel_encoder_feedback"/>
+  <arg name="output_diagnostic_feedback" default="/vehicle/driver/diagnostic_feedback"/>
+  <arg name="output_is_online" default="/vehicle/driver/is_online"/>
+  <arg name="input_ctrl_command" default="/vehicle/driver/ctrl_command"/>
+  <arg name="input_io_command" default="/vehicle/driver/io_command"/>
+
+  <node pkg="yhs_can_control" exec="yhs_can_control" name="yhs_can_control" output="screen">
+    <remap from="input/can_receive" to="$(var output_can_receive)"/>
+    <remap from="output/can_send" to="$(var input_can_send)"/>
+    <remap from="output/ctrl_feedback" to="$(var output_ctrl_feedback)"/>
+    <remap from="output/left_wheel_feedback" to="$(var output_left_wheel_feedback)"/>
+    <remap from="output/right_wheel_feedback" to="$(var output_right_wheel_feedback)"/>
+    <remap from="output/io_feedback" to="$(var output_io_feedback)"/>
+    <remap from="output/odometry_feedback" to="$(var output_odometry_feedback)"/>
+    <remap from="output/battery_information_feedback" to="$(var output_battery_information_feedback)"/>
+    <remap from="output/battery_flag_feedback" to="$(var output_battery_flag_feedback)"/>
+    <remap from="output/wheel_encoder_feedback" to="$(var output_wheel_encoder_feedback)"/>
+    <remap from="output/diagnostic_feedback" to="$(var output_diagnostic_feedback)"/>
+    <remap from="output/is_online" to="$(var output_is_online)"/>
+    <remap from="input/ctrl_command" to="$(var input_ctrl_command)"/>
+    <remap from="input/io_command" to="$(var input_io_command)"/>
+  </node>
+
+  <include file="$(find-pkg-share yhs_can_control)/launch/socket_can_receiver.launch.py">
+    <arg name="output_can_receive" value="$(var output_can_receive)" />
+    <arg name="interface" value="$(var can_interface)" />
+    <arg name="interval_sec" value="$(var can_receiver_interval_sec)" />
+  </include>
+
+  <include file="$(find-pkg-share yhs_can_control)/launch/socket_can_sender.launch.py">
+    <arg name="input_can_send" value="$(var input_can_send)" />
+    <arg name="interface" value="$(var interface)" />
+    <arg name="timeout_sec" value="$(var can_sender_timeout_sec)" />
+  </include>
+</launch>

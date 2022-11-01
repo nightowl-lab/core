@@ -1,0 +1,35 @@
+<launch>
+    <arg name="launch_driver" default="true"/>
+    <arg name="use_concat_filter" default="true"/>
+    <arg name="use_pointcloud_container" default="false" description="launch pointcloud container"/>
+    <arg name="pointcloud_container_name" default="pointcloud_container"/>
+    <arg name="lidar_channel_param_file"/>
+    <arg name="lidar_data_param_file"/>
+    <arg name="vehicle_param_file"/>
+    <arg name="vehicle_mirror_param_file"/>
+    <arg name="time_synchronization" default="true"/>
+
+    <include file="$(find-pkg-share lidar_driver)/launch/lidar_driver.launch.py">               
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="output_topic_msop" value="lslidar/msop_packet"/>
+        <arg name="output_topic_difop" value="lslidar/difop_packet"/>
+        <arg name="output_topic_sync" value="lslidar/sync_header"/>
+        <arg name="time_synchronization" value="$(var time_synchronization)" />
+    </include>
+
+    <include file="$(find-pkg-share lidar_decoder)/launch/lidar_decoder.launch.py">
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="time_synchronization" value="$(var time_synchronization)" />
+        <arg name="lidar_channel_param_file" value="$(var lidar_channel_param_file)"/>
+        <arg name="lidar_data_param_file" value="$(var lidar_data_param_file)"/>
+        <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+        <arg name="use_intra_process" value="true"/>
+        <arg name="use_multithread" value="true"/>
+        <arg name="input_topic_msop" value="lslidar/msop_packet"/>
+        <arg name="input_topic_difop" value="lslidar/difop_packet"/>
+        <arg name="input_topic_sync" value="lslidar/sync_header"/>
+        <arg name="output_topic_pointCloud" value="pointcloud_raw_ex"/>
+    </include>
+
+</launch>

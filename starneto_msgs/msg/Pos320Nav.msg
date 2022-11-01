@@ -1,0 +1,16 @@
+std_msgs/Header header
+int32   weeknum
+float64 weekms
+float32 yaw
+float32 pitch
+float32 roll
+float64 latitude
+float64 longitude
+float64 altitude
+float32 ve
+float32 vn
+float32 vd
+float32 baseline
+int16   satnum
+int16   nsv2
+uint8   navstate

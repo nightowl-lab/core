@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- 加载TF系 -->
+    <group>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher">
+            <param name="robot_description" value="$(command 'cat $(find-pkg-share nightowl_description)/urdf/nightowl_description.urdf')"/>
+        </node>
+
+         <!-- Rviz -->
+        <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(find-pkg-share nightowl_launch)/rviz/go.rviz"/> -->
+    </group>
+    <!-- 启动各模块 -->
+    <include file="$(find-pkg-share nightowl_launch)/launch/sensing/sensing.launch.xml"></include>
+    <include file="$(find-pkg-share nightowl_launch)/launch/vehicle/vehicle.launch.xml"></include>
+    <include file="$(find-pkg-share nightowl_launch)/launch/control/control.launch.xml"></include>
+    <include file="$(find-pkg-share nightowl_launch)/launch/localization/localization.launch.xml"></include>
+	<!-- <include file="$(find-pkg-share nightowl_launch)/launch/perception/perception.launch.xml"></include> -->
+    <include file="$(find-pkg-share nightowl_launch)/launch/map/map.launch.xml"></include>
+</launch>

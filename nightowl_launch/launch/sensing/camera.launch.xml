@@ -1,0 +1,10 @@
+<launch>
+    <!-- 前双目摄像头 -->
+    <include file="$(find-pkg-share nightowl_launch)/launch/sensing/smarter_eye_camera_container.launch.py">
+        <arg name="camera_name" value="front" />
+        <arg name="camera_ip" value="192.168.1.251" />
+        <arg name="left_image_cropped_square_x_offset" value="400" />
+        <arg name="use_cropped_square_output" value="false" />
+        <arg name="base_frame" value="front_camera_link" />
+    </include>
+</launch>

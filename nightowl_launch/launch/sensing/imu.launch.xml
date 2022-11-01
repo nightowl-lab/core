@@ -1,0 +1,9 @@
+<launch>
+    <arg name="imu_topic_name" default="/imu_data" />
+
+    <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+        <arg name="input_topic" value="$(var imu_topic_name)"/>
+        <arg name="output_topic" value="correct_data"/>
+        <arg name="param_file" value="$(find-pkg-share nightowl_launch)/config/sensor/imu_corrector.param.yaml"/>
+    </include>
+</launch>

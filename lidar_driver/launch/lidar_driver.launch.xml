@@ -1,0 +1,33 @@
+<launch>
+  <arg name="frame_id" default="lidar_link"/>
+  <arg name="device_ip" default="192.168.1.200"/>
+  <arg name="msop_port" default="2368"/>
+  <arg name="difop_port" default="2369"/>
+  <arg name="model" default="LSC16"/>
+  <arg name="rpm" default="600.0"/>
+  <arg name="return_mode" default="1"/>
+  <arg name="pcap" default=""/>
+  <arg name="time_synchronization" default="false"/>
+
+  <arg name="output_topic_msop" default="/lslidar/msop_packet"/>
+  <arg name="output_topic_difop" default="/lslidar/difop_packet"/>
+  <arg name="output_topic_sync" default="/lslidar/sync_header"/>
+
+  <node pkg="lidar_driver" exec="lidar_driver" name="lidar_driver" output="screen">
+    <remap from="output/msop_packet" to="$(var output_topic_msop)"/>
+    <remap from="output/difop_packet" to="$(var output_topic_difop)"/>
+    <remap from="output/sync_header" to="$(var output_topic_sync)"/>
+
+    <param name="frame_id" value="$(var frame_id)" />
+    <param name="device_ip" value="$(var device_ip)" />
+    <param name="msop_port" value="$(var msop_port)" />
+    <param name="difop_port" value="$(var difop_port)" />
+    <param name="model" value="$(var model)" />
+    <param name="rpm" value="$(var rpm)" />
+    <param name="return_mode" value="$(var return_mode)" />
+    <param name="pcap" value="$(var pcap)" />
+    <param name="time_synchronization" value="$(var time_synchronization)" />
+
+  </node>
+
+</launch>

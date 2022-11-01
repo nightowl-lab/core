@@ -1,0 +1,40 @@
+<launch>
+  <arg name="can_interface" default="can0" />
+
+  <arg name="input_ctrl_feeback" default="/vehicle/driver/ctrl_feedback"/>
+  <arg name="input_io_feedback" default="/vehicle/driver/io_feedback"/>
+  <arg name="input_ackermann_control_command" default="/control/command/control_cmd"/>
+  <arg name="input_gear_command" default="/control/command/gear_cmd"/>
+  <arg name="input_turn_indicators_command" default="/control/command/turn_indicators_cmd"/>
+  <arg name="input_engage_command" default="/vehicle/engage"/>
+  <arg name="input_vehicle_emergency_command" default="/control/command/emergency_cmd"/>
+
+  <arg name="output_ctrl_command" default="/vehicle/driver/ctrl_command"/>
+  <arg name="output_io_command" default="/vehicle/driver/io_command"/>
+  <arg name="output_control_mode_report" default="/vehicle/status/control_mode"/>
+  <arg name="output_velocity_report" default="/vehicle/status/velocity_status"/>
+  <arg name="output_steering_report" default="/vehicle/status/steering_status"/>
+  <arg name="output_gear_report" default="/vehicle/status/gear_status"/>
+  <arg name="output_turn_indicators_report" default="/vehicle/status/turn_indicators_status"/>
+
+  <node pkg="yhs_autoware_interface" exec="yhs_autoware_interface" name="yhs_autoware_interface" output="screen">
+    <param from="$(find-pkg-share sample_vehicle_description)/config/vehicle_info.param.yaml" />
+
+    <remap from="input/ctrl_feeback" to="$(var input_ctrl_feeback)"/>
+    <remap from="input/io_feedback" to="$(var input_io_feedback)"/>
+    <remap from="input/ackermann_control_command" to="$(var input_ackermann_control_command)"/>
+    <remap from="input/gear_command" to="$(var input_gear_command)"/>
+    <remap from="input/turn_indicators_command" to="$(var input_turn_indicators_command)"/>
+    <remap from="input/engage_command" to="$(var input_engage_command)"/>
+    <remap from="input/vehicle_emergency_command" to="$(var input_vehicle_emergency_command)"/>
+
+    <remap from="output/ctrl_command" to="$(var output_ctrl_command)"/>
+    <remap from="output/io_command" to="$(var output_io_command)"/>
+    <remap from="output/control_mode_report" to="$(var output_control_mode_report)"/>
+    <remap from="output/velocity_report" to="$(var output_velocity_report)"/>
+    <remap from="output/steering_report" to="$(var output_steering_report)"/>
+    <remap from="output/gear_report" to="$(var output_gear_report)"/>
+    <remap from="output/turn_indicators_report" to="$(var output_turn_indicators_report)"/>
+
+  </node>
+</launch>

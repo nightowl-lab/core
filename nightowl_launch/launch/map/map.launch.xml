@@ -1,0 +1,25 @@
+<launch>
+  <arg name="map_path" default="$(find-pkg-share nightowl_map)/map"/>
+  <arg name="lanelet2_map_file" default="10_28_3.osm"/>
+  <arg name="pointcloud_map_file" default="10_28_3.pcd"/>    
+
+  <include file="$(find-pkg-share nightowl_launch)/launch/map/map.launch.py">
+  <arg name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
+  <arg name="pointcloud_map_path" value="$(var map_path)/$(var pointcloud_map_file)"/>
+  </include>
+  
+  <!-- <group>
+    <push-ros-namespace namespace="map"/>
+    <include file="$(find-pkg-share map_loader)/launch/lanelet2_map_loader.launch.xml">
+      <arg name="lanelet2_map_path" value="$(var lanelet2_map_path)"/>
+    </include>
+
+    <include file="$(find-pkg-share map_loader)/launch/pointcloud_map_loader.launch.xml">
+      <arg name="pcd_paths_or_directory" value="$(var pointcloud_map_path)"/>
+    </include>
+
+    <include file="$(find-pkg-share map_tf_generator)/launch/map_tf_generator.launch.xml">
+      <arg name="input_map_points_topic" value="/map/pointcloud_map"/>
+    </include>
+  </group> -->
+</launch>

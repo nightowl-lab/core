@@ -1,0 +1,32 @@
+<launch>
+    <arg name="launch_driver" default="true"/>
+    <arg name="use_concat_filter" default="true"/>
+    <arg name="use_pointcloud_container" default="false" description="launch pointcloud container"/>
+    <arg name="pointcloud_container_name" default="pointcloud_container"/>
+    <arg name="lidar_channel_param_file" default="$(find-pkg-share nightowl_launch)/config/sensor/lidar_channal.param.yaml" description="vertical angle in each channel"/>
+    <arg name="lidar_data_param_file" default="$(find-pkg-share nightowl_launch)/config/sensor/lidar_data.param.yaml" description="basic configure of lidar"/>
+    <arg name="vehicle_param_file" default="$(find-pkg-share nightowl_launch)/config/sensor/vehicle_info.param.yaml" description="path to the file of vehicle info yaml"/>
+    <arg name="vehicle_mirror_param_file" default="$(find-pkg-share nightowl_launch)/config/sensor/mirror.param.yaml" description="path to the file of vehicle mirror position yaml"/>
+
+    <group>
+        <push-ros-namespace namespace="top"/>
+        <include file="$(find-pkg-share lidar_driver)/launch/lslidar.launch.xml">               
+            <arg name="launch_driver" value="$(var launch_driver)"/>
+            <arg name="lidar_channel_param_file" value="$(var lidar_channel_param_file)"/>
+            <arg name="lidar_data_param_file" value="$(var lidar_data_param_file)"/>
+            <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
+            <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+            <arg name="base_frame" value="base_link" />
+            <arg name="frame_id" value="top_lidar_link" />
+        </include>
+    </group>
+
+    <include file="$(find-pkg-share nightowl_launch)/launch/sensing/pointcloud_preprocessor.launch.py">
+      <arg name="base_frame" value="base_link"/>
+      <arg name="use_intra_process" value="true"/>
+      <arg name="use_multithread" value="true"/>
+      <arg name="use_pointcloud_container" value="$(var use_pointcloud_container)"/>
+      <arg name="container_name" value="$(var pointcloud_container_name)"/>
+    </include>
+
+</launch>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="nightowl_description">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0322932329180901 -0.00400275806192987 0.395063707297887"
+        rpy="0 0 0" />
+      <mass
+        value="67.9739959732757" />
+      <inertia
+        ixx="0.884147396581929"
+        ixy="0.000704616696210735"
+        ixz="0.0017052442499102"
+        iyy="1.73500101694665"
+        iyz="-2.13444484981478E-05"
+        izz="1.48267945485636" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="top_lidar_link">
+    <inertial>
+      <origin
+        xyz="-4.92111791754457E-05 1.52984973834959E-05 -0.00542155143310241"
+        rpy="0 0 0" />
+      <mass
+        value="0.108965649452299" />
+      <inertia
+        ixx="0.000114645538379214"
+        ixy="1.3393217942196E-07"
+        ixz="9.91359186562467E-08"
+        iyy="0.000113285761468817"
+        iyz="-3.45963662326406E-08"
+        izz="0.00020539782238143" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/top_lidar_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/top_lidar_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_to_top_lidar_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 1.3009"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="top_lidar_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="ins_link">
+    <inertial>
+      <origin
+        xyz="0.000384869368650342 0.0350096188710476 -1.57887186655326E-06"
+        rpy="0 0 1.5707963268" />
+      <mass
+        value="3.35649548545936" />
+      <inertia
+        ixx="0.00198786974836618"
+        ixy="2.90012364657529E-08"
+        ixz="-5.82242560838067E-09"
+        iyy="0.00534637541333928"
+        iyz="-1.80242704198512E-07"
+        izz="0.00609822231049967" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 1.5707963268" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/ins_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.619607843137255 0.588235294117647 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 1.5707963268" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/ins_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_to_ins_joint"
+    type="fixed">
+    <origin
+      xyz="-0.1813 -0.175 0.55367"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="ins_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="front_camera_link">
+    <inertial>
+      <origin
+        xyz="-9.8225844857025E-05 5.08395318781635E-06 -4.01193730640292E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.721560007316629" />
+      <inertia
+        ixx="0.00230458594454389"
+        ixy="-8.28962522037489E-08"
+        ixz="6.54194415780724E-07"
+        iyy="0.000606057043260382"
+        iyz="-2.25896937153409E-08"
+        izz="0.00199727491231455" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/front_camera_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.498039215686275 0.498039215686275 0.498039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/front_camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_to_front_camera_joint"
+    type="fixed">
+    <origin
+      xyz="0.64908 0 0.76367"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="millimeter_wave_radar_link">
+    <inertial>
+      <origin
+        xyz="-2.0058526396971E-05 -6.663071917129E-08 -7.8314230974319E-06"
+        rpy="0 0 0" />
+      <mass
+        value="1.50952797119693" />
+      <inertia
+        ixx="0.00180054738851195"
+        ixy="1.20116296275416E-09"
+        ixz="1.42095198456239E-07"
+        iyy="0.000938660205198714"
+        iyz="-1.91978394761207E-09"
+        izz="0.00104486973714025" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/millimeter_wave_radar_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.647058823529412 0.619607843137255 0.588235294117647 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://nightowl_description/meshes/millimeter_wave_radar_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_to_millimeter_wave_radar_joint"
+    type="fixed">
+    <origin
+      xyz="0.68958 -0.0365 0.64917"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="millimeter_wave_radar_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

@@ -1,0 +1,31 @@
+<launch>
+    <arg name="launch_driver" default="true"/>
+    <arg name="coordinate_system" default="1" description="0:UTM, 1:MGRS, 2:PLANE"/>
+    <arg name="output_topic_gpfpd" default="/starneto/gnss/raw_data"/>
+    <arg name="output_topic_gtimu" default="/starneto/imu/raw_data"/>
+    <arg name="output_topic_gpgga" default="/starneto/gpgga/raw_data"/>
+
+    <group>
+        <push-ros-namespace namespace="starneto"/>
+        <group>
+            <include file="$(find-pkg-share starneto_control)/launch/starneto_control.launch.xml">
+                <arg name="launch_driver" value="$(var launch_driver)"/>
+                <arg name="output_topic_gpfpd" value="gnss/raw_data"/>
+                <arg name="output_topic_gtimu" value="imu/raw_data"/>
+                <arg name="output_topic_gpgga" value="gpgga/raw_data"/>
+            </include>
+        </group>
+
+        <group>
+            <include file="$(find-pkg-share starneto_autoware_interface)/launch/starneto_autoware_interface.launch.xml">
+                <arg name="coordinate_system" value="$(var coordinate_system)"/>
+                <arg name="input_topic_gpfpd" value="gnss/raw_data"/>
+                <arg name="input_topic_gtimu" value="imu/raw_data"/>
+
+                <arg name="output_topic_fix" value="/fix"/>
+                <arg name="output_topic_navpvt" value="/navpvt"/>
+                <arg name="output_topic_imu" value="imu_raw"/>
+            </include>
+        </group>
+    </group>
+</launch>
