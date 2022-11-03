@@ -249,6 +249,8 @@ def launch_setup(context, *args, **kwargs):
             [FindPackageShare("external_cmd_converter"), "/launch/external_cmd_converter.launch.py"]
         ),
         launch_arguments=[
+            ("csv_path_brake_map", LaunchConfiguration("csv_path_brake_map")),
+            ("csv_path_accel_map", LaunchConfiguration("csv_path_accel_map")),
             ("use_intra_process", LaunchConfiguration("use_intra_process")),
             ("target_container", "/control/control_container"),
         ],
@@ -325,6 +327,22 @@ def generate_launch_description():
     add_launch_arg(
         "lane_departure_checker_param_path",
         [FindPackageShare("lane_departure_checker"), "/config/lane_departure_checker.param.yaml"],
+    )
+
+    # external_cmd_converter
+    add_launch_arg(
+        "csv_path_brake_map",
+        [
+            FindPackageShare("nightowl_launch"),
+            "/config/control/external_cmd_converter/brake_map.csv",
+        ]
+    )
+    add_launch_arg(
+        "csv_path_accel_map",
+        [
+            FindPackageShare("nightowl_launch"),
+            "/config/control/external_cmd_converter/accel_map.csv",
+        ]
     )
 
     # velocity controller

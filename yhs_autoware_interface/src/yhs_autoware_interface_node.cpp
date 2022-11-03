@@ -70,14 +70,15 @@ void YHSAutowareInterfaceNode::toYHSCtrlCommand()
     msg.header.stamp = this->get_clock()->now();
     msg.steering = engageMessage_.engage && !vehicleEmergencyStampedMessage_.emergency ? ackermannControlMessage_.lateral.steering_tire_angle : 0;
     msg.velocity = engageMessage_.engage && !vehicleEmergencyStampedMessage_.emergency ? std::abs(ackermannControlMessage_.longitudinal.speed) : 0;
-    msg.brake = engageMessage_.engage && !vehicleEmergencyStampedMessage_.emergency ? 0 : 100;
+    msg.brake = engageMessage_.engage && !vehicleEmergencyStampedMessage_.emergency ? std::min(-std::min(0.0f, ackermannControlMessage_.longitudinal.acceleration), 1.0f) : 100;
     if (gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::DRIVE) {
         msg.gear = yhs_can_msgs::msg::CtrlCommand::GEAR_D;
     } else if (gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::PARK) {
         msg.gear = yhs_can_msgs::msg::CtrlCommand::GEAR_P;
     } else if (gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::REVERSE) {
         msg.gear = yhs_can_msgs::msg::CtrlCommand::GEAR_R;
-    } else if (gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::NEUTRAL) {
+    } else if (gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::NEUTRAL ||
+               gearCommandMessage_.command == autoware_auto_vehicle_msgs::msg::GearCommand::NONE) {
         msg.gear = yhs_can_msgs::msg::CtrlCommand::GEAR_N;
     } else {
         RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "Autoware sent gear command which it cannot be executed by yhs_can_control.");

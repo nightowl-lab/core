@@ -31,7 +31,7 @@ BaiduJoyControllerNode::BaiduJoyControllerNode(const rclcpp::NodeOptions & nodeO
     joyTimeout_ = joyTimeout_.from_seconds(this->declare_parameter("joy_timeout", 100.0f) / 1000);
     /* 初始化各种服务和话题 */
     joySubscriber_ = this->create_subscription<sensor_msgs::msg::Joy>("input/joy", 10, [&](const sensor_msgs::msg::Joy::SharedPtr msg) {
-        if (msg->axes.size() != 8 || msg->buttons.size() != 16) {
+        if (msg->axes.size() != 6 || msg->buttons.size() != 16) {
             RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "Received Invalid Joy Message, ignoring");
             return;
         }
@@ -146,10 +146,11 @@ void BaiduJoyControllerNode::toControlCommandMessage()
     tier4_external_api_msgs::msg::ControlCommandStamped cmd;
     cmd.stamp = this->get_clock()->now();
     cmd.control.steering_angle = steeringMaxAngle_ * joy_.LStickLeftRight();
+    cmd.control.brake = joy_.LTrigger();
     if (gearMessage_.gear_shift.data == tier4_external_api_msgs::msg::GearShift::DRIVE) {
-        cmd.control.throttle = std::min(forwardRatio_ * joy_.RStickUpDown(), 1.0f);
+        cmd.control.throttle = std::min(forwardRatio_ * joy_.RTrigger(), 1.0f);
     } else if (gearMessage_.gear_shift.data == tier4_external_api_msgs::msg::GearShift::REVERSE) {
-        cmd.control.throttle = std::min(backwardRatio_ * joy_.RStickUpDown(), 1.0f);
+        cmd.control.throttle = std::min(backwardRatio_ * joy_.RTrigger(), 1.0f);
     } else {
         /* 只有前进和后退挡才给速度,其他的直接0 */
         cmd.control.throttle = 0;

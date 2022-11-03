@@ -16,4 +16,5 @@
     <include file="$(find-pkg-share nightowl_launch)/launch/localization/localization.launch.xml"></include>
 	<!-- <include file="$(find-pkg-share nightowl_launch)/launch/perception/perception.launch.xml"></include> -->
     <include file="$(find-pkg-share nightowl_launch)/launch/map/map.launch.xml"></include>
+    <include file="$(find-pkg-share nightowl_launch)/launch/system/system.launch.xml"></include>
 </launch>

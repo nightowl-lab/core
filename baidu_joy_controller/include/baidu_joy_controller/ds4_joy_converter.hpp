@@ -58,10 +58,10 @@ class DS4JoyConverter
 
     float LStickLeftRight() const { return j_.axes.at(0); }
     float LStickUpDown() const { return j_.axes.at(1); }
-    float LTrigger() const { return j_.axes.at(4); }
+    float LTrigger() const { return j_.axes.at(4) == 0.0 ? 0.0 : (-j_.axes.at(4) / 2.0f + 0.5); }
     float RStickLeftRight() const { return j_.axes.at(2); }
     float RStickUpDown() const { return j_.axes.at(3); }
-    float RTrigger() const { return j_.axes.at(5); }
+    float RTrigger() const { return j_.axes.at(5) == 0.0 ? 0.0 : (-j_.axes.at(5) / 2.0f + 0.5); }
 
     bool Cross() const { return j_.buttons.at(0); }
     bool Circle() const { return j_.buttons.at(1); }

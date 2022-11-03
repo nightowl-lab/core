@@ -23,7 +23,7 @@ def generate_launch_description():
     addLaunchArguments("forward_ratio", "0.5")
     addLaunchArguments("backward_ratio", "0.5")
     addLaunchArguments("external_cmd_source", "remote")
-    addLaunchArguments("joy_timeout", "100.0")
+    addLaunchArguments("joy_timeout", "500.0")
 
     addLaunchArguments("input_joy", "/joy/status")
     addLaunchArguments("input_velocity_report", "/vehicle/status/velocity_status")

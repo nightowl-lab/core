@@ -6,10 +6,10 @@
         <group>
             <include file="$(find-pkg-share nightowl_launch)/launch/control/joy_container.launch.py"></include>
         </group>
+    </group>
 
-        <!-- 控制容器 -->
-        <group>
-            <include file="$(find-pkg-share nightowl_launch)/launch/control/control_container.launch.py"></include>
-        </group>
+    <!-- 控制容器 -->
+    <group>
+        <include file="$(find-pkg-share nightowl_launch)/launch/control/control_container.launch.py"></include>
     </group>
 </launch>
