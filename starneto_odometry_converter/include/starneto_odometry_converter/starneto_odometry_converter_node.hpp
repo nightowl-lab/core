@@ -8,8 +8,8 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "starneto_msgs/msg/gpfpd.hpp"
-#include "starneto_msgs/msg/gpgga.hpp"
+#include <starneto_msgs/msg/gpfpd.hpp>
+#include <starneto_msgs/msg/gpgga.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -42,7 +42,6 @@ private:
     bool isInitialized_ = false;
     tf2::Stamped<tf2::Transform> relativePoseTransform_;
     GeographicLib::LocalCartesian relativeCartesia_;
-    int mgrsPrecision_;
     std::string baseFrame_;
     std::vector<bool> allowStatusMap_;
     std::unique_ptr<message_filters::Subscriber<starneto_msgs::msg::Gpfpd>> gpfpdSubscriber_;

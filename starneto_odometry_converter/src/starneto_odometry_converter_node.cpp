@@ -1,7 +1,4 @@
 #include "starneto_odometry_converter/starneto_odometry_converter_node.hpp"
-#include <GeographicLib/Geodesic.hpp>
-#include <GeographicLib/UTMUPS.hpp>
-#include <GeographicLib/MGRS.hpp>
 #include <tf2/LinearMath/Vector3.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -16,7 +13,6 @@ StarnetoOdometryConverterNode::StarnetoOdometryConverterNode(const rclcpp::NodeO
     : Node("starneto_odometry_converter_node", nodeOptions), tfBuffer_(this->get_clock()), tfListener_(tfBuffer_)
 {
     this->baseFrame_ = this->declare_parameter("base_frame", "base_link");
-    this->mgrsPrecision_ = this->declare_parameter("mgrs_precision", 4);
     rclcpp::Parameter param("allow_status_map", std::vector<bool>({}));
     this->declare_parameter("allow_status_map", std::vector<bool>({}));
     this->get_parameter("allow_status_map", param);
@@ -48,17 +44,7 @@ void StarnetoOdometryConverterNode::topicCallback(const starneto_msgs::msg::Gpfp
         relativeCartesia_ = GeographicLib::LocalCartesian(gpgga->latitude, gpgga->longitude, gpgga->msl);
         this->isInitialized_ = true;
         /* 打日记专用 */
-        double utmNorthing, utmEasting;
-        bool utmNorthp;
-        int utmZone;
-        GeographicLib::UTMUPS::Forward(gpgga->latitude, gpgga->longitude, utmZone, utmNorthp, utmEasting, utmNorthing);
-        std::string mgrs;
-        GeographicLib::MGRS::Forward(utmZone, utmNorthp, utmEasting, utmNorthing, PRECISION_METER_SIZE + this->mgrsPrecision_, mgrs);
-        geometry_msgs::msg::Point position;
-        position.x = std::stod(mgrs.substr(GZD_ID_SIZE, PRECISION_METER_SIZE + this->mgrsPrecision_)) * std::pow(10, -this->mgrsPrecision_);
-        position.y = std::stod(mgrs.substr(GZD_ID_SIZE + PRECISION_METER_SIZE + this->mgrsPrecision_, PRECISION_METER_SIZE + this->mgrsPrecision_)) * std::pow(10, -this->mgrsPrecision_);
-        position.z = gpgga->msl;
-        RCLCPP_INFO(this->get_logger(), "System Initialized, MGRS x: %f, y: %f, z: %f, roll: %f, pitch: %f, yaw: %f", position.x, position.y, position.z, gpfpd->roll * DEG_TO_RAD , gpfpd->pitch * DEG_TO_RAD, gpfpd->heading * DEG_TO_RAD);
+        RCLCPP_INFO(this->get_logger(), "System Initialized, latitude: %f, longitude: %f, height: %f, roll: %f, pitch: %f, yaw: %f", gpgga->latitude, gpgga->longitude, gpgga->msl, gpfpd->roll * DEG_TO_RAD , gpfpd->pitch * DEG_TO_RAD, gpfpd->heading * DEG_TO_RAD);
     }
     relativeCartesia_.Forward(gpgga->latitude, gpgga->longitude, gpgga->msl, pose.pose.position.y, pose.pose.position.x, pose.pose.position.z);
     pose.pose.position.y = -pose.pose.position.y;

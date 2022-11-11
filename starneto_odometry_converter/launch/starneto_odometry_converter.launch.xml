@@ -1,6 +1,5 @@
 <launch>
   <arg name="base_frame" default="base_link" />
-  <arg name="mgrs_precision" default="4" />
 
   <arg name="input_topic_gpfpd" default="/sensing/ins/starneto/gnss/raw_data" />
   <arg name="input_topic_gpgga" default="/sensing/ins/starneto/gpgga/raw_data" />
@@ -12,7 +11,6 @@
     <remap from="output/odometry" to="$(var output_topic_odometry)" />
 
     <param name="base_frame" value="$(var base_frame)" />
-    <param name="mgrs_precision" value="$(var mgrs_precision)" />
     <param from="$(find-pkg-share starneto_odometry_converter)/config/params.yaml"/>
   </node>
 
