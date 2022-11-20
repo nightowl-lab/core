@@ -14,6 +14,7 @@
   <depend>starneto_msgs</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <depend>libreadline-dev</depend>
 
   <exec_depend>launch_ros</exec_depend>
 
