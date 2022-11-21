@@ -22,21 +22,20 @@
   <!-- <url type="website">http://wiki.ros.org/robuster_mr_msgs</url> -->
 
 
-  <!-- Author tags are optional, multiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintainers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-  <depend>std_msgs</depend>
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
+
   <build_depend>rosidl_default_generators</build_depend>
+
+  <depend>std_msgs</depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>
 
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
   <member_of_group>rosidl_interface_packages</member_of_group>
 
-
-  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
