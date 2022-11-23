@@ -1,0 +1,15 @@
+{
+    "users": [
+        {
+            "username": "baidu",
+            "password": "nightowlnb",
+            "role": "VEHICLE"
+        },
+        {
+            "username": "105",
+            "password": "105105105",
+            "role": "USER",
+            "allow": ["baidu"]
+        }
+    ]
+}
