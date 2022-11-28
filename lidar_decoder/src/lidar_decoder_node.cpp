@@ -108,6 +108,17 @@ namespace lidar_decoder
             outMsg.header.stamp = this->get_clock()->now();
         }
 
+        if(lastSec * 1e6 + lastNanosec > outMsg.header.stamp.sec * 1e6 + outMsg.header.stamp.nanosec){
+            outMsg.header.stamp.sec++;
+        }
+
+        outMsg.header.stamp.sec = std::max((int64_t)outMsg.header.stamp.sec, lastSec);
+
+        lastNanosec = outMsg.header.stamp.nanosec;
+        lastSec = outMsg.header.stamp.sec;
+        
+        RCLCPP_INFO(this->get_logger(), "sec :%d , nanosec: %d ", outMsg.header.stamp.sec, outMsg.header.stamp.nanosec);
+        
         this->pointCloudExPublisher_->publish(outMsg);
     }
 }

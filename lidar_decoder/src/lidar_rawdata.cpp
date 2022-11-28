@@ -356,8 +356,8 @@ namespace lidar_rawdata
                             point.azimuth = azimuth;
                             point.distance = distance;
                             point.intensity = intensity;
-                            // point.time_stamp = (deltaTime - LSC16_BLOCK_TDURATION * (12 - (block + 1))) - ((firing == 0 ? 16 : 0) + 15 - dsr) * LSC16_DSR_TOFFSET;
-                            //point.time_stamp *= 1e-6;
+                            point.time_stamp = (deltaTime - LSC16_BLOCK_TDURATION * (12 - (block + 1))) - ((firing == 0 ? 16 : 0) + 15 - dsr) * LSC16_DSR_TOFFSET;
+                            point.time_stamp *= 1e-6;
                             
                             // std::cout << azimuth << std::endl;
 

@@ -7,6 +7,7 @@
 
 #include "lidar_decoder/pointcloudXYZIRADT.h"
 #include "lidar_decoder/lidar_rawdata.hpp"
+#include <queue>
 
 namespace lidar_decoder
 {
@@ -24,7 +25,8 @@ namespace lidar_decoder
         double last_time;
         std::vector<int> indices;
         std::shared_ptr<lidar_rawdata::RawData> data_;
-
+        int64_t lastSec;
+        int64_t lastNanosec;
         rclcpp::Subscription<lidar_msgs::msg::LidarScanUnified>::SharedPtr packetSubscriber_;
         rclcpp::Subscription<sensor_msgs::msg::TimeReference>::SharedPtr synchronizationSubscriber_;
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointCloudExPublisher_;

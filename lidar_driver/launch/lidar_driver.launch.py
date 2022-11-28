@@ -27,7 +27,7 @@ def generate_launch_description():
     addLaunchArguments("rpm", "600.0")
     addLaunchArguments("return_mode", "1")
     addLaunchArguments("pcap", "")
-    addLaunchArguments("time_synchronization", "false")
+    addLaunchArguments("time_synchronization", "true")
 
     addLaunchArguments("output_topic_msop", "lslidar/msop_packet")
     addLaunchArguments("output_topic_difop", "lslidar/difop_packet")
