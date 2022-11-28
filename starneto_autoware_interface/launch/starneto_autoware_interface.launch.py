@@ -25,6 +25,7 @@ def generate_launch_description():
 
     addLaunchArguments("input_topic_gpfpd", "gnss/raw_data")
     addLaunchArguments("input_topic_gtimu", "imu/raw_data")
+    addLaunchArguments("input_topic_gpgga", "gpgga/raw_data")
 
     addLaunchArguments("output_topic_fix", "/fix")
     addLaunchArguments("output_topic_navpvt", "/navpvt")
@@ -45,6 +46,7 @@ def launchSetup(context, *args, **kwargs):
         remappings=[
             ("input_topic_gpfpd", [f"/sensing/ins/starneto/", LaunchConfiguration("input_topic_gpfpd")]),
             ("input_topic_gtimu", [f"/sensing/ins/starneto/", LaunchConfiguration("input_topic_gtimu")]),
+            ("input_topic_gpgga", [f"/sensing/ins/starneto/", LaunchConfiguration("input_topic_gpgga")]),
             ("fix", LaunchConfiguration("output_topic_fix")),
             ("navpvt", LaunchConfiguration("output_topic_navpvt")),
             ("imu/data_raw", LaunchConfiguration("output_topic_imu"))

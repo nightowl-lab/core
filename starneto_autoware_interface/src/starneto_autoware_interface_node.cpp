@@ -16,6 +16,10 @@ StarnetoAutowareInterfaceNode::StarnetoAutowareInterfaceNode(const rclcpp::NodeO
         this->gtimuxMessage_ = *msg;
     });
 
+    this->gpggaSubscriber_ = this->create_subscription<starneto_msgs::msg::Gpgga>("input_topic_gpgga", 10, [&](const starneto_msgs::msg::Gpgga::SharedPtr msg){
+        this->gpggaMessage_ = *msg;
+    });
+
     this->navSatFixPublisher_ = this->create_publisher<sensor_msgs::msg::NavSatFix>("fix", 10);
     this->navPvtPublisher_ = this->create_publisher<ublox_msgs::msg::NavPVT>("navpvt", 10);
     this->imuPublisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu/data_raw", 10);
@@ -39,11 +43,28 @@ void StarnetoAutowareInterfaceNode::toAutowareNavSatFixMessage()
     msg.status.status = 0;
     msg.status.service = 15;
 
-    msg.latitude = this->gpfpdMessage_.latitude;
-    msg.longitude = this->gpfpdMessage_.longitude;
+    if(!this->gpggaMessage_.status)
+        RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "GPS Initialization Not Finish Yet");
+
+    // msg.latitude = this->gpfpdMessage_.latitude;
+    // msg.longitude = this->gpfpdMessage_.longitude;
+
+    // 采用GPGGA的经纬度信息
+    msg.latitude = this->gpggaMessage_.latitude;
+    msg.longitude = this->gpggaMessage_.longitude;
+
+    // GPGGA 没有高度信息, 只能用GPFPD的高度信息
     msg.altitude = this->gpfpdMessage_.altitude;
 
-    msg.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
+    /* 计算协方差 */
+    double cov = std::pow(this->gpggaMessage_.hdop * ((this->gpggaMessage_.status == 4 || this->gpggaMessage_.status == 5) 
+        ? RTK_HDOP_TO_COV : GPS_HDOP_TO_COV), 2);
+    
+    msg.position_covariance.at(0) = cov;
+    msg.position_covariance.at(4) = cov;
+    msg.position_covariance.at(8) = cov;
+
+    msg.position_covariance_type = sensor_msgs::msg::NavSatFix::COVARIANCE_TYPE_APPROXIMATED;
 
     this->navSatFixPublisher_->publish(msg);
 }
@@ -59,8 +80,13 @@ void StarnetoAutowareInterfaceNode::toAutowareNavPvtMessage()
 
     msg.heading = DEGREE_TO_RAD(this->gpfpdMessage_.heading ) / 1e-5;   //Heading of motion 2-D [deg / 1e-5]
     msg.num_sv = this->gpfpdMessage_.nsv1 + this->gpfpdMessage_.nsv2;
-    msg.lat = this->gpfpdMessage_.latitude / 1e-7;                      // [deg] to [deg / 1e-7]
-    msg.lon = this->gpfpdMessage_.longitude / 1e-7;                     // [deg] to [deg / 1e-7]
+
+    // msg.lat = this->gpfpdMessage_.latitude / 1e-7;                      // [deg] to [deg / 1e-7]
+    // msg.lon = this->gpfpdMessage_.longitude / 1e-7;                     // [deg] to [deg / 1e-7]
+
+    // 采用GPGGA的经纬度信息
+    msg.lat = this->gpggaMessage_.latitude / 1e-7;                      // [deg] to [deg / 1e-7]
+    msg.lon = this->gpggaMessage_.longitude / 1e-7;                     // [deg] to [deg / 1e-7]
     msg.h_msl = this->gpfpdMessage_.altitude  * 1000;                   // [m] to [mm]
     msg.vel_e = this->gpfpdMessage_.ve * 1000;                          // [m/s] to [mm/s]
     msg.vel_n = this->gpfpdMessage_.vn * 1000;                          // [m/s] to [mm/s]
