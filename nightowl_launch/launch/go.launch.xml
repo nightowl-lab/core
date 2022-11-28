@@ -7,7 +7,7 @@
         </node>
 
          <!-- Rviz -->
-        <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(find-pkg-share nightowl_launch)/rviz/go.rviz"/> -->
+        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(find-pkg-share nightowl_launch)/rviz/go.rviz"/>
     </group>
     <!-- 启动各模块 -->
     <include file="$(find-pkg-share nightowl_launch)/launch/sensing/sensing.launch.xml"></include>

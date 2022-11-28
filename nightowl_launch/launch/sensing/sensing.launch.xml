@@ -18,18 +18,11 @@
         <group>
             <push-ros-namespace namespace="ins"/>
             <include file="$(find-pkg-share nightowl_launch)/launch/sensing/ins.launch.xml"></include>
-        </group>
 
-        <!-- GNSS -->
-        <!-- <group>
-            <push-ros-namespace namespace="gnss"/>
+            <!-- GNSS -->
             <include file="$(find-pkg-share nightowl_launch)/launch/sensing/gnss.launch.xml"></include>
-        </group> -->
-
-        <!-- IMU -->
-        <!-- <group>
-            <push-ros-namespace namespace="imu"/>
+            <!-- IMU -->
             <include file="$(find-pkg-share nightowl_launch)/launch/sensing/imu.launch.xml"></include>
-        </group> -->
+        </group>
     </group>
 </launch>
