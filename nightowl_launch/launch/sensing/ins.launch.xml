@@ -12,7 +12,7 @@
                 <arg name="launch_driver" value="$(var launch_driver)"/>
                 <arg name="output_topic_gpfpd" value="gnss/raw_data"/>
                 <arg name="output_topic_gtimu" value="imu/raw_data"/>
-                <!-- <arg name="output_topic_gpgga" value="gpgga/raw_data"/> -->
+                <arg name="output_topic_gpgga" value="gpgga/raw_data"/>
             </include>
         </group>
 
@@ -23,6 +23,7 @@
 
                 <arg name="input_topic_gpfpd" value="gnss/raw_data"/>
                 <arg name="input_topic_gtimu" value="imu/raw_data"/>
+                <arg name="input_topic_gpgga" value="gpgga/raw_data"/>
 
                 <arg name="output_topic_fix" value="nav_sat_fix"/>
                 <arg name="output_topic_navpvt" value="navpvt"/>
@@ -30,24 +31,4 @@
             </include>
         </group>
     </group>
-    
-    <!-- <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-        <arg name="input_topic" value="starneto/imu_raw"/>
-        <arg name="output_topic" value="imu_data"/>
-        <arg name="param_file" value="$(find-pkg-share nightowl_launch)/config/sensor/imu_corrector.param.yaml"/>
-    </include> -->
-    
-    <include file="$(find-pkg-share gnss_poser)/launch/gnss_poser.launch.xml">
-        <arg name="input_topic_fix" value="$(var navsatfix_topic_name)"/>
-        <arg name="input_topic_navpvt" value="$(var navpvt_topic_name)"/>
-
-        <arg name="output_topic_gnss_pose" value="/sensing/gnss/pose"/>
-        <arg name="output_topic_gnss_pose_cov" value="/sensing/gnss/pose_with_covariance"/>
-        <arg name="output_topic_gnss_fixed" value="/sensing/gnss/fixed"/>
-
-        <arg name="coordinate_system" value="$(var coordinate_system)"/>
-        <arg name="use_ublox_receiver" value="true"/>
-
-        <arg name="gnss_frame" value="ins_link"/>
-    </include>
 </launch>
