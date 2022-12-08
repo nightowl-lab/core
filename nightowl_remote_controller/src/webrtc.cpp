@@ -1,11 +1,12 @@
 #include "nightowl_remote_controller/webrtc.hpp"
-
 #include "nightowl_remote_controller/tool.hpp"
+#include <cstdlib>
 
 namespace nightowl_remote_controller
 {
 
-WebRTC::WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServers, std::string signalingURL) : node_(node), iceServers_(iceServers), signalingURL_(signalingURL), fps_(fps)
+WebRTC::WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServers, std::string signalingURL, std::string signalingUsername, std::string signalingPassword)
+: node_(node), iceServers_(iceServers), signalingURL_(signalingURL), fps_(fps), signalingPassword_(signalingPassword), signalingUsername_(signalingUsername)
 {
     initWebsocket();
     initRTC();
@@ -14,7 +15,14 @@ WebRTC::WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServ
 void WebRTC::initWebsocket()
 {
     std::scoped_lock lock(threadLock_);
-    websocket_.onOpen([&]() { RCLCPP_INFO(node_.get_logger(), "Signaling server connected"); });
+    websocket_.onOpen([&]() {
+        RCLCPP_INFO(node_.get_logger(), "Signaling server connected, try to login");
+        nlohmann::json data;
+        data["username"] = signalingUsername_;
+        data["password"] = signalingPassword_;
+        data["role"] = "VEHICLE";
+        loginCallID_ = sendWebSocketMessage("server", -1, "login", data);
+    });
 
     websocket_.onClosed([&]() { RCLCPP_INFO(node_.get_logger(), "Signaling server disconnected"); });
 
@@ -33,6 +41,18 @@ void WebRTC::initWebsocket()
     while (!websocket_.isOpen()) {
         rclcpp::sleep_for(100ms);
     }
+}
+
+void WebRTC::printSDP(std::string sdp)
+{
+    RCLCPP_INFO(node_.get_logger(), "------Begin SDP------");
+    size_t last = 0;
+    size_t next = 0;
+    while ((next = sdp.find("\r\n", last)) != std::string::npos) {
+        RCLCPP_INFO(node_.get_logger(), sdp.substr(last, next - last).c_str());
+        last = next + 2;
+    }
+    RCLCPP_INFO(node_.get_logger(), "------End SDP------");
 }
 
 void WebRTC::initRTC()
@@ -56,16 +76,8 @@ void WebRTC::initRTC()
             if (receivedOfferCallback_ != NULL) {
                 receivedOfferCallback_(offer_);
             }
-            /* 输出SDP方便调试 */
             RCLCPP_INFO(node_.get_logger(), "WebRTC Got offer!");
-            RCLCPP_INFO(node_.get_logger(), "------Begin SDP------");
-            size_t last = 0;
-            size_t next = 0;
-            while ((next = offer_.find("\r\n", last)) != std::string::npos) {
-                RCLCPP_INFO(node_.get_logger(), offer_.substr(last, next - last).c_str());
-                last = next + 2;
-            }
-            RCLCPP_INFO(node_.get_logger(), "------End SDP------");
+            printSDP(offer_);
         }
     });
 
@@ -123,21 +135,39 @@ void WebRTC::initRTC()
 void WebRTC::sendOffer(std::string clientID, std::string offer)
 {
     nlohmann::json sendMessage;
-    sendMessage["id"] = clientID;
-    sendMessage["type"] = "offer";
-    sendMessage["sdp"] = offer_;
-    websocket_.send(sendMessage.dump());
+    sendMessage[0] = offer_;
+    setOfferCallID_ = sendWebSocketMessage(connectedSignalingClient_, -1, "offer", sendMessage);
     receivedOfferCallback_ = NULL;
     RCLCPP_INFO(node_.get_logger(), "Sent WebRTC Offer!");
 }
 
+int WebRTC::sendWebSocketMessage(std::string to, int callID, std::string type, nlohmann::json data)
+{
+    nlohmann::json sendMessage;
+    callID = callID == -1 ? rand() : callID;
+    sendMessage["to"] = to;
+    sendMessage["callID"] = callID;
+    sendMessage["type"] = type;
+    sendMessage["data"] = data;
+    websocket_.send(sendMessage.dump());
+    return callID;
+}
+
 void WebRTC::onWebsocketMessage(nlohmann::json & message)
 {
-    auto it = message.find("id");
+    RCLCPP_INFO(node_.get_logger(), "%s", message.dump().c_str());
+    std::scoped_lock lock(threadLock_);
+    auto it = message.find("from");
     if (it == message.end()) {
         return;
     }
-    std::string id = it->get<std::string>();
+    std::string from = it->get<std::string>();
+
+    it = message.find("callID");
+    if (it == message.end()) {
+        return;
+    }
+    int callID = it->get<int>();
 
     it = message.find("type");
     if (it == message.end()) {
@@ -145,25 +175,53 @@ void WebRTC::onWebsocketMessage(nlohmann::json & message)
     }
     std::string type = it->get<std::string>();
 
+    auto dataIter = message.find("data");
+    if (dataIter == message.end()) {
+        return;
+    }
+
     if (type == "request") {
-        std::scoped_lock lock(threadLock_);
-        receivedOfferCallback_ = std::bind(&WebRTC::sendOffer, this, id, std::placeholders::_1);
+        nlohmann::json sendData = {{"code", 0}};
+        sendWebSocketMessage(from, callID, "response", sendData);
+        receivedOfferCallback_ = std::bind(&WebRTC::sendOffer, this, from, std::placeholders::_1);
         if (offer_ == "") {
             RCLCPP_WARN(node_.get_logger(), "Waiting for WebRTC Offer ready");
             return;
         }
-        if (connectedSignalingClient_ != "" && connectedSignalingClient_ != id) {
+        if (connectedSignalingClient_ != "" && connectedSignalingClient_ != from) {
             RCLCPP_WARN(node_.get_logger(), "A WebRTC connection is already exists, try to close it and reinitalize.");
             peer_->close();
             initRTC();
             return;
         }
-        connectedSignalingClient_ = id;
+        connectedSignalingClient_ = from;
         receivedOfferCallback_(offer_);
-    } else if (type == "answer") {
-        RCLCPP_INFO(node_.get_logger(), "Received WebRTC Answer from Client: %s", id.c_str());
-        auto description = rtc::Description(message["sdp"].get<std::string>(), "answer");
-        peer_->setRemoteDescription(description);
+    } else if (type == "response") {
+        it = dataIter->find("code");
+        if (it == dataIter->end()) {
+            return;
+        }
+        int code = it->get<int>();
+
+        if (callID == loginCallID_) {
+            loginCallID_ = -1;
+            if (code != 0) {
+                RCLCPP_FATAL(node_.get_logger(), "Failed to login to signaling server, code: %d", code);
+            } else {
+                RCLCPP_INFO(node_.get_logger(), "Login to signaling server successful!");
+            }
+        } else if (callID == setOfferCallID_) {
+            setOfferCallID_ = -1;
+            it = dataIter->find("sdp");
+            if (it == dataIter->end()) {
+                return;
+            }
+            std::string sdp = it->get<std::string>();
+            RCLCPP_INFO(node_.get_logger(), "Received WebRTC Answer from Client: %s", from.c_str());
+            printSDP(sdp);
+            auto description = rtc::Description(sdp, "answer");
+            peer_->setRemoteDescription(description);
+        }
     }
 }
 

@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import { readFileSync } from 'fs'
 
 /* 配置项 */
-const port = 8080;
+const port = 8000;
 const errorCode = {
     "INVALID_ARGUMENTS": -1001,
     "NOT_LOGIN": -1002,

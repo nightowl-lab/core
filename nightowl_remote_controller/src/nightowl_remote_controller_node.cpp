@@ -12,7 +12,9 @@ NightOwlRemoteControllerNode::NightOwlRemoteControllerNode(const rclcpp::NodeOpt
     fps_ = this->declare_parameter("fps", 12.5);
     bitrate_ = this->declare_parameter("bitrate", 1000000);
     iceServers_ = this->declare_parameter("ice_servers", std::vector<std::string>({}));
-    webrtc_.reset(new WebRTC(*this, fps_, iceServers_, signalingServerURL_));
+    signalingServerUsername_ = this->declare_parameter("signaling_server_username", "baidu");
+    signalingServerPassword_ = this->declare_parameter("signaling_server_password", "baidu");
+    webrtc_.reset(new WebRTC(*this, fps_, iceServers_, signalingServerURL_, signalingServerUsername_, signalingServerPassword_));
     /* 订阅话题 */
     imageSubscriber_ = this->create_subscription<sensor_msgs::msg::Image>("input/image", 10, std::bind(&NightOwlRemoteControllerNode::imageCallback, this, std::placeholders::_1));
     subscribeReport("input/gear_report", gearReportSubscriber_, lastGearReport_);

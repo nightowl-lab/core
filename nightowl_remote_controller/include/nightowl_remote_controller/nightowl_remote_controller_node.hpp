@@ -35,6 +35,8 @@ class NightOwlRemoteControllerNode : public rclcpp::Node
     size_t bitrate_;                                 /* 配置码率 */
     double fps_;                                     /* 配置帧率 */
     std::string signalingServerURL_;                 /* 配置信令服务器URL */
+    std::string signalingServerUsername_;            /* 配置信令服务器用户名 */
+    std::string signalingServerPassword_;            /* 配置信令服务器密码 */
     std::vector<std::string> iceServers_;            /* 配置ICE服务器 */
     std::vector<std::string> waitingForReportTopic_; /* 还未接受到第一次报告类话题名称 */
     bool allReportTopicReady_ = false;               /* 所有话题就绪 */

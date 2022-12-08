@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
+import { FPV } from './component/fpv/fpv';
 
 function App() {
   return (
-      <div className="title">Hello world!</div>
+      <FPV />
   );
 }
 

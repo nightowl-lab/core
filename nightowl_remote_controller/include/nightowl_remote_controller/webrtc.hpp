@@ -48,8 +48,10 @@ class WebRTC
      * @param fps 帧率
      * @param iceServers 候选ICE服务器列表
      * @param signalingURL WebSocket信令服务器地址
+     * @param signalingUsername WebSocket信令服务器用户名
+     * @param signalingPassword WebSocket信令服务器密码
      */
-    WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServers, std::string signalingURL);
+    WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServers, std::string signalingURL, std::string signalingUsername, std::string signalingPassword);
 
     /**
      * 接收到H264Packet回调
@@ -79,6 +81,8 @@ class WebRTC
     std::vector<std::string> iceServers_;                                 /* 候选ICE服务器列表 */
     std::string signalingURL_;                                            /* WebSocket信令服务器地址 */
     rtc::WebSocket websocket_;                                            /* WebSocket信令实例 */
+    std::string signalingUsername_;                                       /* WebSocket信令登录用户名 */
+    std::string signalingPassword_;                                       /* WebSocket信令登录密码 */
     std::string offer_ = "";                                              /* 已经接受到的WebRTC Offer */
     std::unique_ptr<rtc::PeerConnection> peer_;                           /* WebRTC连接实例 */
     std::shared_ptr<rtc::DataChannel> unreliableChannel_;                 /* WebRTC不可靠传输类数据通道 */
@@ -92,7 +96,16 @@ class WebRTC
     std::recursive_mutex threadLock_;                                     /* 线程安全锁 */
     double fps_;                                                          /* 配置帧率 */
     std::string connectedSignalingClient_;                                /* 当前已经建立信令连接的客户端ID */
+    int loginCallID_;                                                     /* 登录信令的调用ID */
+    int setOfferCallID_;                                                  /* 设置Offer信令的调用ID */
     std::function<void(std::string offer)> receivedOfferCallback_ = NULL; /* 成功接受到RTC Offer时回调*/
+
+    /**
+     * 打印SDP描述
+     * 
+     * @param sdp SDP字符串
+     */
+    void printSDP(std::string sdp);
 
     /**
      * 发送RPC调用返回值
@@ -131,6 +144,17 @@ class WebRTC
      * @param offer WebRTC Offer
      */
     void sendOffer(std::string clientID, std::string offer);
+
+    /**
+     * 发送WebSocket信息
+     * 
+     * @param to 目标
+     * @param callID 调用ID,若为-1则自动生成
+     * @param type 调用类型
+     * @param data 数据
+     * @return 调用ID
+     */
+    int sendWebSocketMessage(std::string to, int callID, std::string type, nlohmann::json data);
 
     /**
      * 初始化WebSocket

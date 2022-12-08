@@ -21,7 +21,9 @@ def generate_launch_description():
 
     addLaunchArguments("fps", "12.5")
     addLaunchArguments("bitrate", "1000000")
-    addLaunchArguments("signaling_server_url", "ws://127.0.0.1:8000/server")
+    addLaunchArguments("signaling_server_url", "ws://127.0.0.1:8000")
+    addLaunchArguments("signaling_server_username", "baidu")
+    addLaunchArguments("signaling_server_password", "nightowlnb")
     addLaunchArguments("ice_servers", '["turn:xqe2011:xqe2011@e-shower.xqe2011.cn:3478"]')
 
     addLaunchArguments("input_image", "/sensing/camera/front/left_image")
@@ -64,6 +66,8 @@ def launchSetup(context, *args, **kwargs):
             "bitrate": LaunchConfiguration("bitrate"),
             "signaling_server_url": LaunchConfiguration("signaling_server_url"),
             "ice_servers": LaunchConfiguration("ice_servers"),
+            "signaling_server_username": LaunchConfiguration("signaling_server_username"),
+            "signaling_server_password": LaunchConfiguration("signaling_server_password"),
         }],
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
     )
