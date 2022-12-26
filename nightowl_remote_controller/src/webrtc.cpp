@@ -9,7 +9,6 @@ WebRTC::WebRTC(rclcpp::Node & node, double fps, std::vector<std::string> iceServ
 : node_(node), iceServers_(iceServers), signalingURL_(signalingURL), fps_(fps), signalingPassword_(signalingPassword), signalingUsername_(signalingUsername)
 {
     initWebsocket();
-    initRTC();
 }
 
 void WebRTC::initWebsocket()
@@ -155,7 +154,6 @@ int WebRTC::sendWebSocketMessage(std::string to, int callID, std::string type, n
 
 void WebRTC::onWebsocketMessage(nlohmann::json & message)
 {
-    RCLCPP_INFO(node_.get_logger(), "%s", message.dump().c_str());
     std::scoped_lock lock(threadLock_);
     auto it = message.find("from");
     if (it == message.end()) {
@@ -183,19 +181,13 @@ void WebRTC::onWebsocketMessage(nlohmann::json & message)
     if (type == "request") {
         nlohmann::json sendData = {{"code", 0}};
         sendWebSocketMessage(from, callID, "response", sendData);
+        connectedSignalingClient_ = from;
         receivedOfferCallback_ = std::bind(&WebRTC::sendOffer, this, from, std::placeholders::_1);
-        if (offer_ == "") {
-            RCLCPP_WARN(node_.get_logger(), "Waiting for WebRTC Offer ready");
-            return;
-        }
-        if (connectedSignalingClient_ != "" && connectedSignalingClient_ != from) {
+        if (peer_ != nullptr) {
             RCLCPP_WARN(node_.get_logger(), "A WebRTC connection is already exists, try to close it and reinitalize.");
             peer_->close();
-            initRTC();
-            return;
         }
-        connectedSignalingClient_ = from;
-        receivedOfferCallback_(offer_);
+        initRTC();
     } else if (type == "response") {
         it = dataIter->find("code");
         if (it == dataIter->end()) {

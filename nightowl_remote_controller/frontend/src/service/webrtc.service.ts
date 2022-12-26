@@ -131,7 +131,7 @@ export class WebRTCService {
                 pass = false;
             }
             /* 验证CRC校验码 */
-            if (pass && this.toolService!.calculateCRC8(byteArray.slice(0, byteArray.length - 2)) !== byteArray[byteArray.length - 1]) pass = false;
+            if (pass && this.toolService!.calculateCRC8(byteArray.slice(0, byteArray.length - 1)) !== byteArray[byteArray.length - 1]) pass = false;
             /* 错误处理 */
             if (!pass) {
                 console.error(`[WebRTC] Failed to parse data channel message, length: ${byteArray.length}`);
@@ -167,9 +167,19 @@ export class WebRTCService {
      * 初始化WebRTC统计定时器
      */
      private async initWebRTCStatsInterval() {
+        let lastRTPStatsTime = -1, lastRTPBytesReceived = 0, lastRTPFramesDecoded = -1;
         setInterval(async () => {
             let delay = 0, bitrate = 0, fps = 0, state = WebRTCState.DISCONNECTED;
-            if (this.rtc?.connectionState === 'connected') {
+            /* 获取当前RTC状态 */
+            if (!this.rtc?.remoteDescription) {
+                state = WebRTCState.WAITING_FOR_OFFER;
+            } else if (this.rtc?.connectionState === 'connecting') {
+                state = WebRTCState.CONNECTING;
+            }
+            if (this.rtc?.connectionState === 'connected' &&
+                this.reliableDataChannel?.readyState === 'open' &&
+                this.unreliableDataChannel?.readyState === 'open' && 
+                this.mediaTrack?.readyState === 'live') {
                 state = WebRTCState.CONNECTED;
                 /* 测速PING延迟 */
                 if (this.reliableDataChannel !== undefined) {
@@ -177,12 +187,19 @@ export class WebRTCService {
                     await this.makeWebRTCRPCCall(WebRTCRPCType.PING, new Uint8Array(0));
                     const stop = new Date().getTime();
                     delay = stop - start;
-                    console.log(`[WebRTC] Communication delay: ${delay}ms`);
                 }
                 /* 获取FPS和波特率 */
                 if (this.mediaTrack !== undefined) {
                     const mediaStats = await this.rtc?.getStats(this.mediaTrack);
-                    console.log(mediaStats);
+                    mediaStats.forEach(report => {
+                        if (report.type !== 'inbound-rtp') return;
+                        const deltaTime = (report.timestamp - lastRTPStatsTime) / 1000;
+                        bitrate = (report["bytesReceived"] - lastRTPBytesReceived) / deltaTime * 8;
+                        lastRTPBytesReceived = report["bytesReceived"];
+                        fps = (report["framesDecoded"] - lastRTPFramesDecoded) / deltaTime;
+                        lastRTPFramesDecoded = report["framesDecoded"];
+                        lastRTPStatsTime = report.timestamp;
+                    });
                 }
             }
             /* 调用回调 */
@@ -206,7 +223,7 @@ export class WebRTCService {
         sendData[2] = sendCallID & 0xFF;
         sendData[3] = type;
         sendData.set(data, 4);
-        sendData[sendData.length] = this.toolService!.calculateCRC8(sendData.slice(0, sendData.length - 2));
+        sendData[sendData.length - 1] = this.toolService!.calculateCRC8(sendData.slice(0, sendData.length - 1));
         this.reliableDataChannel?.send(sendData);
         /* 等待RPC调用结束 */
         return new Promise<{ code: number; data: Uint8Array }>(resolve => {
@@ -224,7 +241,9 @@ export class WebRTCService {
      */
     private onWebRTCRawVehicleReport(data: Uint8Array) {
         const speed = ((data[0] << 8) | data[1]) / 100;
-        const steeringAngle = ((data[2] << 8) | data[3]) / 100;
+        let steeringAngle = (data[2] << 8) | data[3];
+        /* steeringAngle有符号 */
+        steeringAngle = (steeringAngle >= 32768 ? 65536 - steeringAngle : steeringAngle) / 100;
         const autowareState: AutowareState = data[4];
         const gearState: GearState = data[5];
         const batteryPercent = data[6];

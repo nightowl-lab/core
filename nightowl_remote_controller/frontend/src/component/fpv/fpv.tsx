@@ -11,6 +11,10 @@ export class FPV extends React.Component {
         this.webrtcService?.subscribeWebRTCTrackCallback(stream => {
             this.videoTag.current!.srcObject = stream;
         });
+        this.webrtcService?.subscribeWebRTCStatsCallback((status, fps, delay, bitrate) => console.log(status, fps, delay, bitrate));
+        this.webrtcService?.subscribeVehicleReportCallback((speed, steeringAngle, autowareState, gearState, batteryPercent, vehicleStopMode, emergencyStop, leftTurnIndicator, rightTurnIndicator) => {
+            console.log({ speed, steeringAngle, autowareState, gearState, batteryPercent, vehicleStopMode, emergencyStop, leftTurnIndicator, rightTurnIndicator });
+        })
     }
 
     render() {
