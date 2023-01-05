@@ -1,0 +1,89 @@
+.dashboardWrapper {
+  width: 385px;
+  height: 230px;
+  background-color: white;
+  border-radius: 50px;
+  margin: 15px 0 0 15px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.dashboardStatusWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dashboardStatusCircle {
+  border-radius: 50%;
+  background-color: purple;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboardStatusTitle {
+  font-size: 60px;
+  color: white;
+  font-weight: bolder;
+}
+
+.dashboardSpeedMeterWrapper {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.dashboardSteeringLightWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboardSteeringLightItem {
+  width: 50px;
+  height: 50px;
+}
+
+.dashboardSpeedMeterCounter {
+  font-size: 80px;
+  font-weight: normal;
+  line-height: 1;
+  margin: 0 30px 0 30px;
+}
+
+.dashboardSpeedMeterUnit {
+  font-size: 15px;
+}
+
+.dashboardGearBoxWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  margin-top: 10px;
+}
+
+.dashboardGearBoxEngage {
+  opacity: 100%;
+  font-size: 40px;
+  letter-spacing: 10px;
+  text-indent: 10px;
+}
+
+.dashboardGearBoxDisengage {
+  opacity: 15%;
+  font-size: 40px;
+  letter-spacing: 10px;
+  text-indent: 10px;
+}
+
+/*# sourceMappingURL=dashboard.css.map */
