@@ -1,0 +1,15 @@
+.debugger-wrapper {
+  border: solid black 1px;
+  background-color: lavender;
+  border-radius: 20px;
+}
+
+.debugger-item-wrapper {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/*# sourceMappingURL=debugger.css.map */
