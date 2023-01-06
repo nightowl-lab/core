@@ -1,7 +1,8 @@
 import React from "react";
 import { WebRTCService } from "../../service/webrtc.service";
+import "./fpv.css"
 
-export class FPV extends React.Component {
+export class FPV extends React.Component<any, any> {
     private webrtcService = WebRTCService.getInstance();
     public videoTag: React.RefObject<HTMLVideoElement> = React.createRef();
 
@@ -18,6 +19,10 @@ export class FPV extends React.Component {
     }
 
     render() {
-        return <video ref={this.videoTag} controls autoPlay/>;
+        return(
+            <div className={'fpv-video-wrapper'}>
+                <video ref={this.videoTag} controls autoPlay className={'fpv-video'}/>
+            </div>
+        )
     }
 }

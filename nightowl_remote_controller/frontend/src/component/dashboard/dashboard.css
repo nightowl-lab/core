@@ -1,6 +1,6 @@
-.dashboardWrapper {
-  width: 385px;
-  height: 230px;
+.dashboard-wrapper {
+  width: 380px;
+  height: 225px;
   background-color: white;
   border-radius: 50px;
   margin: 15px 0 0 15px;
@@ -10,13 +10,14 @@
   flex-direction: column;
 }
 
-.dashboardStatusWrapper {
+.dashboard-status-wrapper {
   position: absolute;
   top: 0;
   left: 0;
+  transform: translate(-15px, -15px);
 }
 
-.dashboardStatusCircle {
+.dashboard-status-circle {
   border-radius: 50%;
   background-color: purple;
   width: 80px;
@@ -26,13 +27,13 @@
   align-items: center;
 }
 
-.dashboardStatusTitle {
+.dashboard-status-title {
   font-size: 60px;
   color: white;
   font-weight: bolder;
 }
 
-.dashboardSpeedMeterWrapper {
+.dashboard-speedMeter-wrapper {
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -40,30 +41,49 @@
   justify-content: space-evenly;
 }
 
-.dashboardSteeringLightWrapper {
+.dashboard-steeringLight-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-.dashboardSteeringLightItem {
+@keyframes dashboard-steeringLight-flash {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+.dashboard-steeringLight-item-ON {
+  animation-duration: 0.5s;
+  animation-direction: alternate;
+  animation-name: dashboard-steeringLight-flash;
+  animation-iteration-count: infinite;
+  animation-timing-function: steps(2, jump-none);
   width: 50px;
   height: 50px;
 }
 
-.dashboardSpeedMeterCounter {
+.dashboard-steeringLight-item-OFF {
+  opacity: 0%;
+  width: 50px;
+  height: 50px;
+}
+
+.dashboard-speedMeter-counter {
   font-size: 80px;
   font-weight: normal;
   line-height: 1;
   margin: 0 30px 0 30px;
 }
 
-.dashboardSpeedMeterUnit {
+.dashboard-speedMeter-unit {
   font-size: 15px;
 }
 
-.dashboardGearBoxWrapper {
+.dashboard-gearBox-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -72,14 +92,14 @@
   margin-top: 10px;
 }
 
-.dashboardGearBoxEngage {
+.dashboard-gearBox-engage {
   opacity: 100%;
   font-size: 40px;
   letter-spacing: 10px;
   text-indent: 10px;
 }
 
-.dashboardGearBoxDisengage {
+.dashboard-gearBox-disengage {
   opacity: 15%;
   font-size: 40px;
   letter-spacing: 10px;

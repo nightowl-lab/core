@@ -10,30 +10,48 @@ export class DashBoard extends React.Component<any, any> {
         speedMeterCounter: 0,
         speedMeterUnit: 'KMH',
         gears: ['P', 'R', 'N', 'D'],
-        currentGear: 'N'
+        currentGear: 'N',
+        isLSL: false,
+        isRSL: false,
     }
+
+    public switchSteeringLight = (which: string = 'L', state: boolean = false) => {
+        if (which === 'L') {
+            this.setState({
+                isLSL: state
+            })
+        } else if (which === 'R') {
+            this.setState({
+                isRSL: state
+            })
+        }
+    }
+
     render() {
         return (
-            <div className='dashboardWrapper'>
-                <div className='dashboardStatusWrapper'>
-                    <div className='dashboardStatusCircle'>
-                        <div className='dashboardStatusTitle'>{this.state.status}</div>
+            <div className='dashboard-wrapper'>
+                <div className='dashboard-status-wrapper'>
+                    <div className='dashboard-status-circle'>
+                        <div className='dashboard-status-title'>{this.state.status}</div>
                     </div>
                 </div>
 
-                <div className='dashboardSpeedMeterWrapper'>
-                    <div className='dashboardSteeringLightWrapper'>
-                        <LSL className={'dashboardSteeringLightItem'}/>
-                        <div className='dashboardSpeedMeterCounter'>{this.state.speedMeterCounter}</div>
-                        <RSL className={'dashboardSteeringLightItem'}/>
+                <div className='dashboard-speedMeter-wrapper'>
+                    <div className='dashboard-steeringLight-wrapper'>
+                        <LSL
+                            className={this.state.isLSL ? 'dashboard-steeringLight-item-ON' : 'dashboard-steeringLight-item-OFF'}/>
+                        <div className='dashboard-speedMeter-counter'>{this.state.speedMeterCounter}</div>
+                        <RSL
+                            className={this.state.isRSL ? 'dashboard-steeringLight-item-ON' : 'dashboard-steeringLight-item-OFF'}/>
                     </div>
-                    <div className='dashboardSpeedMeterUnit'>{this.state.speedMeterUnit}</div>
+                    <div className='dashboard-speedMeter-unit'>{this.state.speedMeterUnit}</div>
                 </div>
 
-                <div className='dashboardGearBoxWrapper'>
+                <div className='dashboard-gearBox-wrapper'>
                     {
                         this.state.gears.map((value, index) => {
-                            return <div key={index} className={value === this.state.currentGear ? 'dashboardGearBoxEngage' : 'dashboardGearBoxDisengage'}>{value}</div>
+                            return <div key={index}
+                                        className={value === this.state.currentGear ? 'dashboard-gearBox-engage' : 'dashboard-gearBox-disengage'}>{value}</div>
                         })
                     }
                 </div>

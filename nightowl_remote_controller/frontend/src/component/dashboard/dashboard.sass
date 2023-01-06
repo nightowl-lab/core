@@ -1,6 +1,6 @@
-.dashboardWrapper
-  width: 385px
-  height: 230px
+.dashboard-wrapper
+  width: 380px
+  height: 225px
   background-color: white
   border-radius: 50px
   margin: 15px 0 0 15px
@@ -9,12 +9,13 @@
   align-items: center
   flex-direction: column
 
-.dashboardStatusWrapper
+.dashboard-status-wrapper
   position: absolute
   top: 0
   left: 0
+  transform: translate(-15px, -15px)
 
-.dashboardStatusCircle
+.dashboard-status-circle
   border-radius: 50%
   background-color: purple
   width: 80px
@@ -23,38 +24,56 @@
   justify-content: center
   align-items: center
 
-.dashboardStatusTitle
+.dashboard-status-title
   font-size: 60px
   color: white
   font-weight: bolder
 
-.dashboardSpeedMeterWrapper
+.dashboard-speedMeter-wrapper
   width: fit-content
   display: flex
   flex-direction: column
   align-items: center
   justify-content: space-evenly
 
-.dashboardSteeringLightWrapper
+.dashboard-steeringLight-wrapper
   display: flex
   flex-direction: row
   justify-content: center
   align-items: center
 
-.dashboardSteeringLightItem
+@mixin dashboard-steeringLight-item
   width: 50px
   height: 50px
 
-.dashboardSpeedMeterCounter
+@keyframes dashboard-steeringLight-flash
+  from
+    opacity: 0%
+  to
+    opacity: 100%
+
+.dashboard-steeringLight-item-ON
+  animation-duration: 0.5s
+  animation-direction: alternate
+  animation-name: dashboard-steeringLight-flash
+  animation-iteration-count: infinite
+  animation-timing-function: steps(2, jump-none)
+  @include dashboard-steeringLight-item
+
+.dashboard-steeringLight-item-OFF
+  opacity: 0%
+  @include dashboard-steeringLight-item
+
+.dashboard-speedMeter-counter
   font-size: 80px
   font-weight: normal
   line-height: 1
   margin: 0 30px 0 30px
 
-.dashboardSpeedMeterUnit
+.dashboard-speedMeter-unit
   font-size: 15px
 
-.dashboardGearBoxWrapper
+.dashboard-gearBox-wrapper
   display: flex
   flex-direction: row
   justify-content: center
@@ -62,16 +81,16 @@
   align-content: center
   margin-top: 10px
 
-@mixin dashboardGearBoxTitle
+@mixin dashboard-gearBox-title
   font-size: 40px
   letter-spacing: 10px
   text-indent: 10px
 
-.dashboardGearBoxEngage
+.dashboard-gearBox-engage
   opacity: 100%
-  @include dashboardGearBoxTitle
+  @include dashboard-gearBox-title
 
-.dashboardGearBoxDisengage
+.dashboard-gearBox-disengage
   opacity: 15%
-  @include dashboardGearBoxTitle
+  @include dashboard-gearBox-title
 
